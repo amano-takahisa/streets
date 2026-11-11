@@ -31,6 +31,7 @@ import {
   type DeckLayout,
   loadDeckLayout,
 } from "@streets/core/settings/deck-layout-setting";
+import { loadHoverCard } from "@streets/core/settings/hover-card-setting";
 import type { LocalePreference } from "@streets/core/settings/locale-setting";
 import {
   type SwipeMode,
@@ -127,6 +128,8 @@ const DisplaySettings: Component<{
   chatOrder: ChatOrder;
   /** 投稿の時刻の見せ方（この端末の設定）。 */
   timeFormat: TimeFormat;
+  /** 名前やアイコンに触れたときの名刺を出すか（この端末の設定）。 */
+  hoverCard: boolean;
   /** カラムを画面の幅いっぱいに広げるか（この端末の設定）。 */
   columnStretch: boolean;
   /** アクション欄に出す操作（この端末の設定）。 */
@@ -154,6 +157,7 @@ const DisplaySettings: Component<{
   const initialWriteProgress = loadWriteProgress(null);
   const initialChatOrder = loadChatOrder(null);
   const initialTimeFormat = loadTimeFormat(null);
+  const initialHoverCard = loadHoverCard(null);
 
   return (
     <div class="flex flex-col gap-7">
@@ -468,6 +472,22 @@ const DisplaySettings: Component<{
             label={t("settings.display.writeProgress.switch")}
             checked={props.writeProgress}
             onChange={(on) => dispatch({ type: "deck/set-write-progress", on })}
+          />
+        </SettingsSection>
+
+        <SettingsSection
+          id="hoverCard"
+          scope="device"
+          changed={props.hoverCard !== initialHoverCard}
+          onReset={() =>
+            dispatch({ type: "deck/set-hover-card", on: initialHoverCard })
+          }
+          description={t("settings.display.hoverCard.description")}
+        >
+          <Switch
+            label={t("settings.display.hoverCard.switch")}
+            checked={props.hoverCard}
+            onChange={(on) => dispatch({ type: "deck/set-hover-card", on })}
           />
         </SettingsSection>
 

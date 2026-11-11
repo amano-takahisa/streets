@@ -180,6 +180,9 @@
       "relays": "購読するリレー",
       "relaysTitle": "リレー（{{ count }}）",
       "searchQuery": "検索の条件",
+      "postsPerAuthor": "フォローしている人ごとの件数",
+      "postsPerAuthorOff": "制限しない",
+      "postsPerAuthorValue": "新しい {{ count }} 件",
       "timeslip": "この日時から過去へさかのぼる",
       "timeslipInput": "さかのぼり始める日時"
     },

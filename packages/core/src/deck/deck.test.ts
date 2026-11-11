@@ -739,6 +739,23 @@ describe("linkCards", () => {
   });
 });
 
+describe("フォローしている人ごとの件数（postsPerAuthor）", () => {
+  const column = deck.decks[0]?.columns[0];
+  if (!column) throw new Error("fixture");
+
+  it("保存して読み戻せる", () => {
+    const saved = setOf([{ ...column, postsPerAuthor: 3 }]);
+    expect(columnsOf(saveDeckSet(saved))?.[0]?.postsPerAuthor).toBe(3);
+  });
+
+  it("範囲の外の値なら、カラムを残して制限なしに戻す", () => {
+    // 捕まえる変異: 知らない値でカラムごと捨てる
+    const loaded = columnsOf(rawOf([{ ...column, postsPerAuthor: 1000 }]))?.[0];
+    expect(loaded?.id).toBe(column.id);
+    expect(loaded?.postsPerAuthor).toBeUndefined();
+  });
+});
+
 describe("カラムの幅", () => {
   const column = deck.decks[0]?.columns[0];
   if (!column) throw new Error("fixture");

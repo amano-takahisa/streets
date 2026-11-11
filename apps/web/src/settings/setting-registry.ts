@@ -81,6 +81,7 @@ const placements = {
   columnWidth: { page: "display" },
   contentWarning: { page: "display" },
   chatOrder: { page: "display" },
+  hoverCard: { page: "display" },
   timeFormat: { page: "display" },
   writeProgress: { page: "display" },
   actionLayout: { page: "display" },

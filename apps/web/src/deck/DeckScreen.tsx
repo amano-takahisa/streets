@@ -95,6 +95,7 @@ import { CustomEmojisMediator } from "../emoji/custom-emojis";
 import { preloadEmojiPicker } from "../emoji/lazy-emoji-picker";
 import { errorReport, setErrorReport } from "../error-report-setting";
 import { fallbackRelays, setFallbackRelays } from "../fallback-relay-setting";
+import { setHoverCard } from "../hover-card-setting";
 import { setLocalePreference, t } from "../i18n/locale";
 import { setImageDownscaling } from "../image-downscaling-setting";
 import { useIsWide } from "../is-wide";
@@ -1047,6 +1048,9 @@ const DeckScreen: Component<{
         return true;
       case "deck/set-content-warning":
         setContentWarningMode(event.mode);
+        return true;
+      case "deck/set-hover-card":
+        setHoverCard(event.on);
         return true;
       case "deck/set-deck-layout":
         setDeckLayout(event.layout);

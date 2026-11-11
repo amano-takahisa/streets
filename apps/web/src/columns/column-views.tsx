@@ -22,6 +22,7 @@ import {
 } from "@streets/core/deck/column-sources";
 import {
   type ColumnDef,
+  POSTS_PER_AUTHOR_MAX,
   columnShow,
   groupsActions,
 } from "@streets/core/deck/deck";
@@ -34,7 +35,7 @@ import {
 import { relayLabel } from "@streets/core/settings/relay-edit";
 import type { RelayListState } from "@streets/core/settings/relay-list-state";
 import { formatEventTimeFull } from "@streets/core/view/format-time";
-import { type Component, Show, createMemo } from "solid-js";
+import { type Component, Show, createMemo, createSignal } from "solid-js";
 import { useEventActions } from "../actions";
 import { useSending } from "../actions-mediator";
 import type { ColumnPatch } from "../deck/ColumnSettings";
@@ -51,6 +52,7 @@ import { useDispatch } from "../ui-events";
 import ColumnTabs from "../ui/ColumnTabs";
 import DateTimeInput from "../ui/DateTimeInput";
 import IconButton from "../ui/IconButton";
+import Slider from "../ui/Slider";
 import Switch from "../ui/Switch";
 import WelcomeColumn from "../welcome/WelcomeColumn";
 import ActionFeed from "./blocks/ActionFeed";
@@ -375,7 +377,35 @@ const COLUMN_VIEWS: { [K in ColumnKind]: ColumnView<ColumnSourceOf<K>> } = {
               { chats: columnShow(scope.column()).chats },
             )
           }
+          perAuthor={() => scope.column().postsPerAuthor}
         />
+      );
+    },
+    Settings: (props) => {
+      const patch = usePatch(() => props.column);
+      // 動かしている間は手元の値でつまみを動かし、離したときにカラムへ当てる。
+      const [moving, setMoving] = createSignal<number>();
+      return (
+        <SettingField label={t("columns.views.settings.postsPerAuthor")}>
+          <Slider
+            label={t("columns.views.settings.postsPerAuthor")}
+            labelHidden
+            value={moving() ?? props.column.postsPerAuthor ?? 0}
+            min={0}
+            max={POSTS_PER_AUTHOR_MAX}
+            step={1}
+            format={(count) =>
+              count === 0
+                ? t("columns.views.settings.postsPerAuthorOff")
+                : t("columns.views.settings.postsPerAuthorValue", { count })
+            }
+            onChange={(count) => setMoving(count)}
+            onChangeEnd={(count) => {
+              patch({ postsPerAuthor: count === 0 ? undefined : count });
+              setMoving(undefined);
+            }}
+          />
+        </SettingField>
       );
     },
   },
