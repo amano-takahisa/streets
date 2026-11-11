@@ -12,6 +12,7 @@ import { createResource, createSignal } from "solid-js";
 import type { Meta, StoryObj } from "storybook-solidjs-vite";
 import { setChatOrder } from "../chat-order-setting";
 import { StaticCustomEmojis } from "../emoji/custom-emojis";
+import { setHoverCard } from "../hover-card-setting";
 import { EventSceneProvider } from "../storybook/EventScene";
 import { useStoryNip05 } from "../storybook/nip05";
 import {
@@ -273,6 +274,9 @@ const Story = (props: Props) => {
                           return true;
                         case "deck/set-chat-order":
                           setChatOrder(event.order);
+                          return true;
+                        case "deck/set-hover-card":
+                          setHoverCard(event.on);
                           return true;
                         case "deck/set-default-reaction":
                           setDefaultReaction(event.input);
