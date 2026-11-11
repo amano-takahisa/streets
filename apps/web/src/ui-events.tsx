@@ -246,6 +246,8 @@ export type DeckEvent =
   | { type: "deck/set-search-history"; on: boolean }
   /** 閲覧注意の投稿の扱い。この端末に保存する。 */
   | { type: "deck/set-content-warning"; mode: ContentWarningMode }
+  /** 名前やアイコンに触れたときの名刺を出すか。この端末に保存する。 */
+  | { type: "deck/set-hover-card"; on: boolean }
   /** カラムを横に並べるか。この端末に保存する。 */
   | { type: "deck/set-deck-layout"; layout: DeckLayout }
   /** 1 列ずつのときに左右へ払うと何が起きるか。この端末に保存する。 */
