@@ -6,7 +6,10 @@ import {
   PAGE_SIZE,
   SECTION_WINDOW,
 } from "@streets/core/read/source";
-import { visibleColumnItems } from "@streets/core/view/column-items";
+import {
+  latestPerAuthor,
+  visibleColumnItems,
+} from "@streets/core/view/column-items";
 import { type Component, Match, Switch } from "solid-js";
 import { useListsUnderWarning } from "../../content-warning-setting";
 import OlderLoader from "../../deck/OlderLoader";
@@ -26,6 +29,11 @@ const EventList: Component<{
   source: () => NostrSource | undefined;
   /** 1 件ずつ見て、出さないものを落とす。 */
   filter?: (event: NostrEvent) => boolean;
+  /**
+   * 投稿者ごとに、新しい方から何件まで並べるか。無ければ制限しない。
+   * 取る量は変えず、描くときに絞る（ホームの「フォローしている人ごとの件数」）。
+   */
+  perAuthor?: () => number | undefined;
   name?: string;
   /** source の `until` より新しい方へも取り足す。 */
   pagesNewer?: boolean;
@@ -49,10 +57,13 @@ const EventList: Component<{
     const received = (filter ? events.filter(filter) : events).filter(
       listsUnderWarning,
     );
-    return visibleColumnItems(
-      received,
-      columnShow(column()),
-      columnFacets(column()),
+    return latestPerAuthor(
+      visibleColumnItems(
+        received,
+        columnShow(column()),
+        columnFacets(column()),
+      ),
+      props.perAuthor?.(),
     );
   };
   const items = () => visible(section.items());

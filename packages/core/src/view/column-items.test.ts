@@ -2,7 +2,7 @@ import { describe, expect, it } from "vite-plus/test";
 import type { ColumnFacet } from "../deck/column-kinds";
 import { DEFAULT_COLUMN_SHOW } from "../deck/deck";
 import type { NostrEvent } from "../nostr/event";
-import { visibleColumnItems } from "./column-items";
+import { latestPerAuthor, visibleColumnItems } from "./column-items";
 
 const ID = "a".repeat(64);
 
@@ -150,6 +150,38 @@ describe("visibleColumnItems", () => {
         ["replies", "quotes"],
       ),
     ).toEqual([note, reply]);
+  });
+});
+
+describe("latestPerAuthor", () => {
+  const author = (pubkey: string, created_at: number): NostrEvent => ({
+    ...note,
+    id: `${pubkey}${created_at}`.padEnd(64, "0"),
+    pubkey,
+    created_at,
+  });
+  // 新しい順。A が 4 件、B が 2 件。
+  const a1 = author("a".repeat(64), 400);
+  const b1 = author("b".repeat(64), 300);
+  const a2 = author("a".repeat(64), 200);
+  const a3 = author("a".repeat(64), 100);
+  const b2 = author("b".repeat(64), 50);
+  const a4 = author("a".repeat(64), 10);
+  const events = [a1, b1, a2, a3, b2, a4];
+
+  it("投稿者ごとに、新しい方から指定した件数だけ残す", () => {
+    expect(latestPerAuthor(events, 2)).toEqual([a1, b1, a2, b2]);
+    expect(latestPerAuthor(events, 1)).toEqual([a1, b1]);
+  });
+
+  it("指定が無ければ何も落とさない", () => {
+    expect(latestPerAuthor(events, undefined)).toEqual(events);
+  });
+
+  it("並び順は変えない", () => {
+    expect(latestPerAuthor(events, 2).map((event) => event.created_at)).toEqual(
+      [400, 300, 200, 50],
+    );
   });
 });
 

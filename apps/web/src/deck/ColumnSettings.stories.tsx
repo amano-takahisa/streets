@@ -57,6 +57,11 @@ export const ミュートを畳む: Story = {
   args: { initial: { ...base, muted: "fold" } },
 };
 
+/** フォローしている人ごとの件数を絞ると、名前の横にその件数が出る。 */
+export const 人ごとの件数を絞る: Story = {
+  args: { initial: { ...base, postsPerAuthor: 3 } },
+};
+
 /** 発言を 1 件ずつの投稿として並べないカラムでは、畳むを選ばせない。 */
 export const チャンネル: Story = {
   args: {

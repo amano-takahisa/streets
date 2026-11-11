@@ -180,6 +180,9 @@
       "relays": "Relays to read from",
       "relaysTitle": "Relays ({{ count }})",
       "searchQuery": "Search conditions",
+      "postsPerAuthor": "Posts per person you follow",
+      "postsPerAuthorOff": "No limit",
+      "postsPerAuthorValue": "Newest {{ count }}",
       "timeslip": "Go back in time from this date and time",
       "timeslipInput": "Date and time to start from"
     },

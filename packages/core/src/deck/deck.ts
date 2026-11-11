@@ -21,6 +21,8 @@ export const COLUMN_WIDTH_PX: Record<ColumnWidth, number> = {
 
 export const COLUMN_WIDTH_MIN = 200;
 export const COLUMN_WIDTH_MAX = 800;
+/** カラムの設定で選べる、フォローしている人ごとの件数の上限。 */
+export const POSTS_PER_AUTHOR_MAX = 20;
 
 const clampColumnWidth = (px: number): number =>
   Math.min(COLUMN_WIDTH_MAX, Math.max(COLUMN_WIDTH_MIN, Math.round(px)));
@@ -115,6 +117,11 @@ export type ColumnDef = {
    * まとめるか。保存された値が無いときはまとめる（`groupsActions`）。
    */
   groupNotifications?: boolean;
+  /**
+   * フォローしている人ごとに、新しい方から何件まで並べるか。無ければ制限しない。
+   * 流れは間引かず、描くときに絞る（`latestPerAuthor`）。
+   */
+  postsPerAuthor?: number;
   /** 保存された値が無いときは、カラムの種類の既定（`columnMutedDisplay`）。 */
   muted?: MutedDisplay;
   /**
@@ -263,6 +270,18 @@ const columnDefSchema = v.object({
     undefined,
   ),
   groupNotifications: v.optional(v.boolean()),
+  // 知らない値・範囲外でカラムごと捨てない。制限なしに戻す。
+  postsPerAuthor: v.fallback(
+    v.optional(
+      v.pipe(
+        v.number(),
+        v.integer(),
+        v.minValue(1),
+        v.maxValue(POSTS_PER_AUTHOR_MAX),
+      ),
+    ),
+    undefined,
+  ),
   muted: v.fallback(
     v.optional(v.picklist(["hide", "fold", "show"])),
     undefined,
