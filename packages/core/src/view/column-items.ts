@@ -31,3 +31,24 @@ export const visibleColumnItems = (
     return !off("mentions");
   });
 };
+
+/**
+ * 投稿者ごとに、新しい方から `perAuthor` 件だけ残す。`events` は新しい順に
+ * 並んでいること（読む層はその順で返す）。`undefined` なら何も落とさない。
+ *
+ * 購読は変えずに描くときだけ間引く —— フォローしている人を 1 人ずつ
+ * `limit` 付きで読み直すと、リレーごとのフィルタが人数ぶんに増える。
+ */
+export const latestPerAuthor = (
+  events: readonly NostrEvent[],
+  perAuthor: number | undefined,
+): NostrEvent[] => {
+  if (perAuthor === undefined || perAuthor < 1) return [...events];
+  const kept = new Map<string, number>();
+  return events.filter((event) => {
+    const count = kept.get(event.pubkey) ?? 0;
+    if (count >= perAuthor) return false;
+    kept.set(event.pubkey, count + 1);
+    return true;
+  });
+};
