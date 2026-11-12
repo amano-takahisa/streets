@@ -9,7 +9,8 @@ export default defineConfig({
     printWidth: 80,
     sortImports: { newlinesBetween: false },
     // 表の桁揃えなどで文書の差分が膨らむので、Markdown は整形しない。
-    ignorePatterns: ["worker-configuration.d.ts", "**/*.md"],
+    // .direnv には direnv が置く flake の入力（nixpkgs の写し）が入る。
+    ignorePatterns: ["worker-configuration.d.ts", "**/*.md", ".direnv"],
   },
   lint: {
     plugins: ["eslint", "typescript", "unicorn", "oxc", "import", "jsx-a11y"],
@@ -66,7 +67,8 @@ export default defineConfig({
         rules: { "no-restricted-imports": "off" },
       },
     ],
-    ignorePatterns: ["worker-configuration.d.ts"],
+    // .direnv には direnv が置く flake の入力（nixpkgs の写し）が入る。
+    ignorePatterns: ["worker-configuration.d.ts", ".direnv"],
     options: {
       typeAware: true,
       typeCheck: true,
