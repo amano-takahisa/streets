@@ -196,6 +196,11 @@ export const createSession = (
       true,
     );
 
+  const appUrl = () =>
+    import.meta.env.BASE_URL === "/"
+      ? location.origin
+      : `${location.origin}${import.meta.env.BASE_URL}`;
+
   const loginWithBunker = (uri: string) =>
     run(
       async () => {
@@ -217,7 +222,7 @@ export const createSession = (
                 pool,
                 bunker,
                 hooks,
-                metadataUrl: location.origin,
+                metadataUrl: appUrl(),
               }),
             ),
           );
@@ -243,7 +248,10 @@ export const createSession = (
       pool,
       relays: options.nostrConnectRelays,
       resume,
-      metadata: { name: "Streets", url: location.origin },
+      metadata: {
+        name: "Streets",
+        url: appUrl(),
+      },
       hooks,
     });
     pendingAttempt.write(saveNostrConnectAttempt(attempt.stored));

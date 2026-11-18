@@ -1,0 +1,162 @@
+name: Personal Pages
+
+on:
+  push:
+    branches: [personal]
+  schedule:
+    - cron: "23 19 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: personal-pages
+  queue: max
+
+jobs:
+  build:
+    if: github.repository == 'amano-takahisa/streets' && github.ref == 'refs/heads/personal'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    outputs:
+      previous-main: ${{ steps.prepare.outputs.previous-main }}
+      previous-personal: ${{ steps.prepare.outputs.previous-personal }}
+      main: ${{ steps.prepare.outputs.main }}
+      personal: ${{ steps.prepare.outputs.personal }}
+      bundle: ${{ steps.prepare.outputs.bundle }}
+      pages: ${{ steps.prepare.outputs.pages }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'push' && github.sha || 'refs/heads/personal' }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: 検証対象を決める
+        id: prepare
+        shell: bash
+        run: |
+          previous_personal=$(git rev-parse HEAD)
+          personal=$previous_personal
+          bundle=
+          if [[ "$GITHUB_EVENT_NAME" != push ]]; then
+            git switch --detach "$previous_personal"
+            previous_main=$(git rev-parse refs/remotes/origin/main)
+            git fetch --no-tags https://github.com/eyemono-moe/streets.git refs/heads/main
+            main=$(git rev-parse FETCH_HEAD)
+            git merge-base --is-ancestor "$previous_main" "$main"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            bash scripts/rebuild-personal.sh "$main" "$previous_personal"
+            personal=$(git rev-parse HEAD)
+            {
+              echo "previous-main=$previous_main"
+              echo "previous-personal=$previous_personal"
+              echo "main=$main"
+            } >> "$GITHUB_OUTPUT"
+            if [[ "$main" != "$previous_main" || "$personal" != "$previous_personal" ]]; then
+              bundle="personal-sync-$GITHUB_RUN_ATTEMPT"
+              git update-ref refs/heads/pages-sync-main "$main"
+              git update-ref refs/heads/pages-sync-personal "$personal"
+              git bundle create "$RUNNER_TEMP/personal.bundle" refs/heads/pages-sync-main refs/heads/pages-sync-personal
+            elif [[ "$GITHUB_EVENT_NAME" == schedule ]]; then
+              exit 0
+            fi
+          fi
+          {
+            echo "personal=$personal"
+            echo "bundle=$bundle"
+            echo "pages=personal-pages-$GITHUB_RUN_ATTEMPT"
+          } >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/setup
+        if: steps.prepare.outputs.pages != ''
+      - name: リポジトリを検証する
+        if: steps.prepare.outputs.pages != ''
+        run: vp run verify
+      - name: Pages をビルドする
+        if: steps.prepare.outputs.pages != ''
+        # GITHUB_SHA は起動時のコミットを指すため、ビルドには HEAD を読ませる。
+        run: env -u GITHUB_SHA vp run @streets/web#build:pages
+      - uses: actions/upload-pages-artifact@v4
+        if: steps.prepare.outputs.pages != ''
+        with:
+          name: ${{ steps.prepare.outputs.pages }}
+          path: apps/web/dist-pages
+      - uses: actions/upload-artifact@v7
+        if: steps.prepare.outputs.bundle != ''
+        with:
+          name: ${{ steps.prepare.outputs.bundle }}
+          path: ${{ runner.temp }}/personal.bundle
+          if-no-files-found: error
+          retention-days: 1
+
+  update-branches:
+    needs: build
+    if: needs.build.outputs.bundle != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # upstream のワークフローファイルも取り込む場合は Workflows 権限がいる。
+          token: ${{ secrets.PERSONAL_SYNC_TOKEN || github.token }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build.outputs.bundle }}
+          path: ${{ runner.temp }}/personal-sync
+      - name: 検証済みの main と personal を更新する
+        shell: bash
+        env:
+          PREVIOUS_MAIN: ${{ needs.build.outputs.previous-main }}
+          PREVIOUS_PERSONAL: ${{ needs.build.outputs.previous-personal }}
+          MAIN: ${{ needs.build.outputs.main }}
+          PERSONAL: ${{ needs.build.outputs.personal }}
+        run: |
+          git fetch --no-tags "$RUNNER_TEMP/personal-sync/personal.bundle" \
+            refs/heads/pages-sync-main:refs/heads/pages-sync-main \
+            refs/heads/pages-sync-personal:refs/heads/pages-sync-personal
+          [[ "$(git rev-parse refs/heads/pages-sync-main)" == "$MAIN" ]]
+          [[ "$(git rev-parse refs/heads/pages-sync-personal)" == "$PERSONAL" ]]
+          git merge-base --is-ancestor "$PREVIOUS_MAIN" "$MAIN"
+          git merge-base --is-ancestor "$MAIN" "$PERSONAL"
+          git push --atomic \
+            --force-with-lease="refs/heads/main:$PREVIOUS_MAIN" \
+            --force-with-lease="refs/heads/personal:$PREVIOUS_PERSONAL" \
+            origin "$MAIN:refs/heads/main" "$PERSONAL:refs/heads/personal"
+
+  deploy:
+    needs: [build, update-branches]
+    if: |
+      !cancelled() && needs.build.result == 'success' && needs.build.outputs.pages != '' &&
+      (needs.update-branches.result == 'success' || needs.update-branches.result == 'skipped')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: personal が検証後に進んでいないことを確かめる
+        id: current
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PERSONAL: ${{ needs.build.outputs.personal }}
+        run: |
+          current_personal=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/personal" --jq .object.sha)
+          if [[ "$current_personal" == "$PERSONAL" ]]; then
+            echo 'matches=true' >> "$GITHUB_OUTPUT"
+          else
+            echo '::notice::personal が更新されたため、このビルドの公開を省きます。'
+          fi
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        if: steps.current.outputs.matches == 'true'
+        with:
+          artifact_name: ${{ needs.build.outputs.pages }}

@@ -11,7 +11,7 @@
     "privacy": "Privacy policy"
   },
   "overview": {
-    "intro": "Streets is a Nostr client that runs in your browser. Combine columns such as timelines, notifications and search results to build a screen that's all your own.",
+    "intro": "Streets Personal is an unofficial fork of Streets.",
     "version": "Version",
     "source": "Source code",
     "license": "License",
@@ -23,7 +23,10 @@
     "fontBefore": "The characters for custom emoji are made from Noto Sans JP, M PLUS Rounded 1c and Noto Serif JP (",
     "fontLink": "SIL Open Font License 1.1",
     "fontAfter": ")",
-    "tour": "Take the tour again"
+    "tour": "Take the tour again",
+    "upstream": "Upstream",
+    "issues": "Support",
+    "forkIssues": "Report a fork issue"
   },
   "releases": {
     "empty": "There are no release notes yet.",

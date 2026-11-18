@@ -17,6 +17,7 @@ storybook-static
 apps/web/stats
 dist-ssr
 dist-e2e
+dist-pages
 *.local
 
 # Editor directories and files

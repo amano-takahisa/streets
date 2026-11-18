@@ -57,7 +57,11 @@ type WelcomeColumnViewProps = {
 const Head: Component = () => (
   <header class="flex flex-col gap-4 p-4 pt-6">
     <p class="flex items-center gap-2.5">
-      <img src="/favicon.svg" alt="" class="size-9" />
+      <img
+        src={`${import.meta.env.BASE_URL}favicon.svg`}
+        alt=""
+        class="size-9"
+      />
       <span class="font-700 text-[26px] leading-none">Streets</span>
     </p>
     <h1 class="font-700 text-[32px] leading-tight">See it your way.</h1>

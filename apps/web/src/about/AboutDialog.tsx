@@ -66,16 +66,36 @@ const Overview: Component<{ tour?: boolean }> = (props) => (
       <dd>{version()}</dd>
       <dt>{t("about.overview.source")}</dt>
       <dd>
-        <Link href={REPOSITORY}>{REPOSITORY}</Link>
+        <Link href="https://github.com/amano-takahisa/streets">
+          Streets Personal
+        </Link>
+      </dd>
+      <dt>{t("about.overview.upstream")}</dt>
+      <dd>
+        <Link href={REPOSITORY}>eyemono-moe/streets</Link>
+      </dd>
+      <dt>{t("about.overview.issues")}</dt>
+      <dd>
+        <Link href="https://github.com/amano-takahisa/streets/issues">
+          {t("about.overview.forkIssues")}
+        </Link>
       </dd>
       <dt>{t("about.overview.license")}</dt>
       <dd>
-        <Link href={`${REPOSITORY}/blob/main/LICENCE`}>MIT</Link>
+        <Link
+          href={
+            import.meta.env.VITE_PAGES
+              ? `${import.meta.env.BASE_URL}LICENCE`
+              : `${REPOSITORY}/blob/main/LICENCE`
+          }
+        >
+          MIT
+        </Link>
       </dd>
       <dt>{t("about.overview.font")}</dt>
       <dd>
         {t("about.overview.fontBefore")}
-        <Link href="/emoji-glyphs/v1/NOTICE.txt">
+        <Link href={`${import.meta.env.BASE_URL}emoji-glyphs/v1/NOTICE.txt`}>
           {t("about.overview.fontLink")}
         </Link>
         {t("about.overview.fontAfter")}

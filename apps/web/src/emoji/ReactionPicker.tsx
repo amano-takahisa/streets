@@ -76,22 +76,26 @@ const ReactionPicker: Component<{
               });
               close();
             }}
-            footer={(query) => (
-              <MakerFooter
-                layout={layout}
-                query={query()}
-                sending={sending()}
-                lastStyle={lastStyle()}
-                onSend={(spec, style) => {
-                  sendMade(spec, style);
-                  close();
-                }}
-                onAdjust={(text, candidate) => {
-                  maker.requestAdjust(text, candidate);
-                  close();
-                }}
-              />
-            )}
+            footer={
+              import.meta.env.VITE_PAGES
+                ? undefined
+                : (query) => (
+                    <MakerFooter
+                      layout={layout}
+                      query={query()}
+                      sending={sending()}
+                      lastStyle={lastStyle()}
+                      onSend={(spec, style) => {
+                        sendMade(spec, style);
+                        close();
+                      }}
+                      onAdjust={(text, candidate) => {
+                        maker.requestAdjust(text, candidate);
+                        close();
+                      }}
+                    />
+                  )
+            }
           />
         )}
       </PickerSurface>

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "vp build",
+    "build:pages": "vp build --mode pages",
     "build:analyze": "vp build --mode analyze",
     "dev": "vp dev",
     "preview": "vp preview",

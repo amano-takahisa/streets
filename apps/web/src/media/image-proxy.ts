@@ -13,6 +13,7 @@ export const resizedImageUrl = (
   source: string,
   preset: ImagePreset,
 ): string | undefined => {
+  if (import.meta.env.VITE_PAGES) return undefined;
   let url: URL;
   try {
     url = new URL(source);

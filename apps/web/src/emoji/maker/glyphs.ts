@@ -16,7 +16,7 @@ const load = (font: FontId, name: string): Promise<GlyphShard> => {
   const id = `${font}/${name}`;
   let task = loading.get(id);
   if (!task) {
-    task = fetch(`/emoji-glyphs/v1/${id}.bin`).then(
+    task = fetch(`${import.meta.env.BASE_URL}emoji-glyphs/v1/${id}.bin`).then(
       async (res) => {
         // 無いファイルは、一枚の画面の index.html が 200 で返る。
         const type = res.headers.get("content-type") ?? "";

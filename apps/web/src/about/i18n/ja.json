@@ -11,7 +11,7 @@
     "privacy": "プライバシーポリシー"
   },
   "overview": {
-    "intro": "Streets はブラウザで使える Nostr のクライアントです。タイムライン、通知、検索結果などのカラムを組み合わせて、自分だけの画面を組み立てられます。",
+    "intro": "Streets Personal は Streets の非公式フォークです。",
     "version": "バージョン",
     "source": "ソースコード",
     "license": "ライセンス",
@@ -23,7 +23,10 @@
     "fontBefore": "カスタム絵文字の文字は Noto Sans JP・M PLUS Rounded 1c・Noto Serif JP から作っています（",
     "fontLink": "SIL Open Font License 1.1",
     "fontAfter": "）",
-    "tour": "使い方を確認する"
+    "tour": "使い方を確認する",
+    "upstream": "本家",
+    "issues": "問い合わせ",
+    "forkIssues": "個人版の不具合を報告"
   },
   "releases": {
     "empty": "まだリリースノートはありません。",

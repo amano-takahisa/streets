@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://streets.eyemono.moe" target="_blank" rel="noopener noreferrer">
+  <a href="https://amano-takahisa.github.io/streets/" target="_blank" rel="noopener noreferrer">
     <picture>
       <source srcset=".github/assets/streets_logo_full_dark.min.svg" media="(prefers-color-scheme: dark)" />
       <img src=".github/assets/streets_logo_full_light.min.svg" alt="streets logo" height="100" />
@@ -8,14 +8,24 @@
   <p align="center">
     Column-based nostr client for web
     <br />
-    <a href="https://streets.eyemono.moe" target="_blank" rel="noopener noreferrer"><strong>Step into the Streets</strong></a>
+    <a href="https://amano-takahisa.github.io/streets/" target="_blank" rel="noopener noreferrer"><strong>Streets Personal を開く</strong></a>
     <br />
     <br />
-    <a href="https://github.com/eyemono-moe/streets/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/amano-takahisa/streets/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
-    <a href="https://github.com/eyemono-moe/streets/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/amano-takahisa/streets/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
+
+**Streets Personal** は [Streets](https://github.com/eyemono-moe/streets) の非公式フォークです。[個人版についての報告](https://github.com/amano-takahisa/streets/issues)はこちらへお願いします。
+
+ホームでフォローしている人ごとの表示件数を選べます。本家と同じアカウントを使うとデッキ設定を共有し、本家でデッキを保存したときにこの件数が「制限なし」に戻ることがあります。プロフィールの名刺を非表示にする設定も追加しています。
+
+GitHub Pages 版はブラウザからリレーへ接続します。リンクは通常のリンクとして表示し、アイコンは画像の配信元から読み込みます。カスタム絵文字の新規生成と、投稿の共有 URL ごとのリンクプレビュー生成には Cloudflare Worker が必要です。
+
+### 上流への追従
+
+公開元は `personal` です。毎日と手動実行時に本家の `main` を確認し、[取り込む機能の一覧](.github/personal-features.txt) の順にマージしてから、flake と公開設定のコミットを載せ直します。本家への PR は対応する `feat/*` から作り、採用された機能は一覧から外します。日次実行は日本時間 4:23 に予定されています。手動では Actions の「Personal Pages」から実行できます。競合や検証失敗は実行ログで確認できます。上流のワークフロー変更を取り込む push が権限不足で拒否された場合は、この fork に限定して Contents と Workflows の読み書きを許可したトークンを Actions secret `PERSONAL_SYNC_TOKEN` に登録し、再実行してください。
 
 ![Streets screenshot](/.github/assets/screenshot.png)
 

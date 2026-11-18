@@ -65,23 +65,27 @@ const ComposeEmojiPicker: Component<{
               props.onSelect(emoji);
               close();
             }}
-            footer={(query) => (
-              <MakerFooter
-                layout={layout}
-                query={query()}
-                verb="insert"
-                sending={props.disabled}
-                lastStyle={lastStyle()}
-                onSend={(spec, style) => {
-                  insertMade(spec, style, defaultShortcode(spec));
-                  close();
-                }}
-                onAdjust={(text, candidate) => {
-                  maker.requestAdjust(text, candidate);
-                  close();
-                }}
-              />
-            )}
+            footer={
+              import.meta.env.VITE_PAGES
+                ? undefined
+                : (query) => (
+                    <MakerFooter
+                      layout={layout}
+                      query={query()}
+                      verb="insert"
+                      sending={props.disabled}
+                      lastStyle={lastStyle()}
+                      onSend={(spec, style) => {
+                        insertMade(spec, style, defaultShortcode(spec));
+                        close();
+                      }}
+                      onAdjust={(text, candidate) => {
+                        maker.requestAdjust(text, candidate);
+                        close();
+                      }}
+                    />
+                  )
+            }
           />
         )}
       </PickerSurface>

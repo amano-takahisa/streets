@@ -63,6 +63,8 @@ type S = StoryObj<typeof meta>;
 
 export const 広い画面: S = {};
 
+export const 個人版の案内_英語: S = { globals: { locale: "en" } };
+
 export const 狭い画面: S = { args: { wide: false } };
 
 /** ログインしてデッキから開いたとき。使い方の案内をもう一度始められる。 */

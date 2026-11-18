@@ -298,26 +298,28 @@ const AddEmojiSection: Component<{
       <span class="c-secondary font-600 text-caption">
         {t("settings.emojiList.addOne")}
       </span>
-      <SegmentedControl
-        label={t("settings.emojiList.howToMake")}
-        variant="secondary"
-        value={source()}
-        onChange={setSource}
-        options={[
-          {
-            value: "image",
-            label: t("settings.emojiList.fromImage"),
-            icon: "i-material-symbols:image-outline-rounded",
-          },
-          {
-            value: "text",
-            label: t("settings.emojiList.fromText"),
-            icon: "i-material-symbols:text-fields-rounded",
-          },
-        ]}
-      />
+      <Show when={!import.meta.env.VITE_PAGES}>
+        <SegmentedControl
+          label={t("settings.emojiList.howToMake")}
+          variant="secondary"
+          value={source()}
+          onChange={setSource}
+          options={[
+            {
+              value: "image",
+              label: t("settings.emojiList.fromImage"),
+              icon: "i-material-symbols:image-outline-rounded",
+            },
+            {
+              value: "text",
+              label: t("settings.emojiList.fromText"),
+              icon: "i-material-symbols:text-fields-rounded",
+            },
+          ]}
+        />
+      </Show>
       <Show
-        when={source() === "text"}
+        when={!import.meta.env.VITE_PAGES && source() === "text"}
         fallback={<AddEmoji emojis={props.emojis} disabled={props.disabled} />}
       >
         <MakeEmoji emojis={props.emojis} disabled={props.disabled} />

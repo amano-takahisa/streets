@@ -42,7 +42,7 @@ render(
     // `/nevent1…` や `/npub1…` は画面を切り替えず、デッキの左端に一時カラムを開く（ADR-0032）。
     // ルートを分けると行き来のたびに App ごと作り直され、読み取り層も張り直される。
     <QueryClientProvider client={queryClient}>
-      <Router>
+      <Router base={import.meta.env.BASE_URL}>
         <Route path="/:entity?" component={App} />
       </Router>
     </QueryClientProvider>

@@ -33,7 +33,7 @@ sw.addEventListener("activate", (event) => event.waitUntil(sw.clients.claim()));
  * 付けないが、開発や E2E で読み書き先を手元のリレーに絞る `?relays=` を落とさないため。
  */
 const appUrl = (request: Request, value: string) => {
-  const url = new URL("/", sw.location.origin);
+  const url = new URL(import.meta.env.BASE_URL, sw.location.origin);
   url.search = new URL(request.url).search;
   url.searchParams.set(SHARE_PARAM, value);
   return url.href;

@@ -34,6 +34,8 @@ export const useLinkCard = (url: Accessor<string>) =>
   createQuery(() => ({
     queryKey: linkCardQueryKey(url()),
     queryFn: () => fetchLinkCard(url()),
+    enabled: !import.meta.env.VITE_PAGES,
+    initialData: import.meta.env.VITE_PAGES ? null : undefined,
     retry: false,
   }));
 

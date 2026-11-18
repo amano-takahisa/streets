@@ -86,6 +86,6 @@ export const receiveShare = (): void => {
 export const registerShareWorker = (): void => {
   if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
   void navigator.serviceWorker
-    .register("/sw.js", { type: "module" })
+    .register(`${import.meta.env.BASE_URL}sw.js`, { type: "module" })
     .catch(() => {});
 };
