@@ -235,8 +235,8 @@ const TOOLS: Tool[] = [
   },
 ];
 
-const Privacy: Component = () => (
-  <div class="flex flex-col gap-7">
+const WorkerPrivacy: Component = () => (
+  <>
     <SettingsSection
       title={t("about.privacy.monitoring.title")}
       description={t("about.privacy.monitoring.description")}
@@ -335,7 +335,19 @@ const Privacy: Component = () => (
     >
       <p class="c-primary text-body">{t("about.privacy.customEmoji.body")}</p>
     </SettingsSection>
+  </>
+);
 
+const Privacy: Component<{ pages: boolean }> = (props) => (
+  <div class="flex flex-col gap-7">
+    <Show when={props.pages} fallback={<WorkerPrivacy />}>
+      <SettingsSection title={t("about.privacy.pages.title")}>
+        <p class="c-primary text-body">{t("about.privacy.pages.hosting")}</p>
+        <p class="c-primary text-body">
+          {t("about.privacy.pages.connections")}
+        </p>
+      </SettingsSection>
+    </Show>
     <SettingsSection
       title={t("about.privacy.storage.title")}
       description={t("about.privacy.storage.description")}
@@ -355,6 +367,8 @@ const AboutDialog: Component<{
   releaseNotes?: readonly ReleaseNote[];
   /** 最初に開くページ。ストーリーで各ページを見せるため。 */
   initialPage?: string;
+  /** 配信先ごとのプライバシーの説明をストーリーで切り替える。 */
+  pages?: boolean;
   /** 開くたびに見せるページ（紹介のカラムのリンクなど）。省くと前に見ていたページのまま。 */
   requestedPage?: string;
   /**
@@ -409,7 +423,9 @@ const AboutDialog: Component<{
       label: t("about.pages.privacy"),
       icon: "i-material-symbols:shield-outline",
       title: t("about.pages.privacy"),
-      content: () => <Privacy />,
+      content: () => (
+        <Privacy pages={props.pages ?? import.meta.env.VITE_PAGES} />
+      ),
     },
   ];
   // ダイアログはカラムの外にあり、「重ねる」を受ける段が無い。人を開く操作に読み替える。

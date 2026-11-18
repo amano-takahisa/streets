@@ -39,6 +39,11 @@
     "intro": "\"Displayed\" events can be shown as events. \"Internal\" events are used for settings, communication and so on, and show as unsupported if you open them as an event."
   },
   "privacy": {
+    "pages": {
+      "title": "Hosting and connections",
+      "hosting": "GitHub Pages hosts this personal version. The app does not use analytics or send automatic error reports.",
+      "connections": "Your browser connects directly to Nostr relays and image hosts. Those services receive connection information such as your IP address."
+    },
     "monitoring": {
       "title": "Tools for finding bugs and measuring speed",
       "description": "To find and fix bugs and slowdowns, this app sends error records and the time that page loads and actions take to a tool provided by a third party. Action timings are sent for only some sessions.",

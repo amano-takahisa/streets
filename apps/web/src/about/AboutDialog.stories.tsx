@@ -18,6 +18,7 @@ type Props = {
   tour?: boolean;
   releaseNotes?: ReleaseNote[];
   initialPage?: string;
+  pages?: boolean;
 };
 
 const notes: ReleaseNote[] = [
@@ -50,6 +51,7 @@ const meta = {
           tour={props.tour}
           releaseNotes={props.releaseNotes}
           initialPage={props.initialPage}
+          pages={props.pages}
         />
       </Mediates>
     </EventSceneProvider>
@@ -96,6 +98,15 @@ export const リリースノート_人の参照: S = {
 };
 
 export const プライバシー: S = { args: { initialPage: "privacy" } };
+
+export const プライバシー_GitHubPages: S = {
+  args: { initialPage: "privacy", pages: true },
+};
+
+export const プライバシー_GitHubPages_英語: S = {
+  args: { initialPage: "privacy", pages: true, wide: false },
+  globals: { locale: "en" },
+};
 
 export const プライバシー_狭い画面: S = {
   args: { wide: false, initialPage: "privacy" },

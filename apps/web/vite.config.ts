@@ -142,6 +142,10 @@ export default defineConfig(({ mode }) => {
     base,
     define: {
       "import.meta.env.VITE_PAGES": JSON.stringify(pages),
+      ...(pages && {
+        "import.meta.env.VITE_SENTRY_DSN": JSON.stringify(""),
+        "import.meta.env.VITE_FEEDBACK_URL": JSON.stringify(""),
+      }),
       "import.meta.env.VITE_COMMIT_SHA": JSON.stringify(commit),
       "import.meta.env.VITE_SENTRY_RELEASE": JSON.stringify(release),
       // Sentry から、使っていない機能（デバッグ出力）を落とす。
