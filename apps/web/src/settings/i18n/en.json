@@ -196,6 +196,11 @@
       "description": "Choose whether new chat messages appear at the bottom or the top",
       "keywords": ["public chat", "channel", "new messages", "top", "bottom"]
     },
+    "hoverCard": {
+      "title": "Card on hover",
+      "description": "Choose whether a profile card appears when the pointer rests on a name or avatar",
+      "keywords": ["hover", "popup", "profile", "pointer", "mouse"]
+    },
     "timeFormat": {
       "title": "Post time",
       "description": "Show post times as dates or as time ago",
@@ -649,6 +654,10 @@
       "newestFirst": "Newest at the top",
       "description": "In public chat columns, choose whether new messages appear at the very bottom or the very top. With \"Newest at the top\", the message box moves to the top too."
     },
+    "hoverCard": {
+      "switch": "Show a profile card when the pointer rests on a name or avatar",
+      "description": "When the pointer rests on a name or avatar, show a small card with that person's profile. Turn this off to see nothing until you press the name or avatar to open it."
+    },
     "timeFormat": {
       "absolute": "Clock time",
       "relative": "Time ago",
@@ -677,7 +686,7 @@
       "description": "When on, columns placed side by side stretch to fill the width of the screen. You can set each column's width ratio to S, M, or L. If there are too many columns to fit, you can scroll sideways.",
       "switch": "Stretch columns to fill the screen width"
     },
-    "detailsSummary": "Chat order, loading display, and arranging the action bar",
+    "detailsSummary": "Chat order, hover cards, loading display, and arranging the action bar",
     "writeProgress": {
       "description": "When you save a post, like, or setting, shows at the bottom right whether it reached each relay it was sent to. When off, only shows when saving settings succeeds or fails.",
       "switch": "Show saving progress"

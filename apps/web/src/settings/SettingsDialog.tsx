@@ -22,6 +22,7 @@ import {
 import { actionLayout } from "../action-layout-setting";
 import { chatOrder } from "../chat-order-setting";
 import { contentWarningMode } from "../content-warning-setting";
+import { hoverCard } from "../hover-card-setting";
 import { t } from "../i18n/locale";
 import { timeFormat } from "../time-format-setting";
 import { Mediates, type UiEvent, useDispatch } from "../ui-events";
@@ -234,6 +235,7 @@ const SettingsDialog: Component<{
           writeProgress={props.writeProgress}
           contentWarning={contentWarningMode()}
           chatOrder={chatOrder()}
+          hoverCard={hoverCard()}
           timeFormat={timeFormat()}
           deckLayout={props.deckLayout}
           swipeMode={props.swipeMode}

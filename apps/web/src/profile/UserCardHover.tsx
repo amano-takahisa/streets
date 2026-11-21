@@ -1,5 +1,6 @@
 import { HoverCard } from "@ark-ui/solid/hover-card";
-import type { Component, JSX } from "solid-js";
+import { type Component, type JSX, Show } from "solid-js";
+import { hoverCard } from "../hover-card-setting";
 import { Portal } from "../ui/Portal";
 import UserCard from "./UserCard";
 
@@ -20,18 +21,25 @@ const UserCardHover: Component<{
   pubkey: string;
   trigger: (props: HoverTrigger) => JSX.Element;
 }> = (props) => (
-  // lazyMount/unmountOnExit が無いと、閉じている間も中身を作り続けて
-  // 1 カラムぶんの DOM が何倍にもなる（投稿 1 件ごとに 2 か所ある）。
-  <HoverCard.Root lazyMount unmountOnExit openDelay={400} closeDelay={120}>
-    <HoverCard.Trigger asChild={props.trigger} />
-    <Portal>
-      <HoverCard.Positioner>
-        <HoverCard.Content class="motion-pop overflow-hidden rounded-3 border border-control bg-primary shadow-[0_8px_24px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.6)]">
-          <UserCard pubkey={props.pubkey} />
-        </HoverCard.Content>
-      </HoverCard.Positioner>
-    </Portal>
-  </HoverCard.Root>
+  // 切っているときは Ark UI を挟まず、押せる要素をそのまま出す —— 触れても
+  // 何も出さず、押したときの動き（その人のカラムを重ねる）だけを残す。
+  <Show
+    when={hoverCard()}
+    fallback={props.trigger((triggerProps) => triggerProps ?? {})}
+  >
+    {/* lazyMount/unmountOnExit が無いと、閉じている間も中身を作り続けて
+        1 カラムぶんの DOM が何倍にもなる（投稿 1 件ごとに 2 か所ある）。 */}
+    <HoverCard.Root lazyMount unmountOnExit openDelay={400} closeDelay={120}>
+      <HoverCard.Trigger asChild={props.trigger} />
+      <Portal>
+        <HoverCard.Positioner>
+          <HoverCard.Content class="motion-pop overflow-hidden rounded-3 border border-control bg-primary shadow-[0_8px_24px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.6)]">
+            <UserCard pubkey={props.pubkey} />
+          </HoverCard.Content>
+        </HoverCard.Positioner>
+      </Portal>
+    </HoverCard.Root>
+  </Show>
 );
 
 export default UserCardHover;
